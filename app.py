@@ -1,3 +1,4 @@
+import time
 import logging
 import streamlit as st
 from logic import cassandra, summarizer
@@ -8,6 +9,11 @@ logging.basicConfig(
     filename="logs/cassandra.log",
     filemode="a",
     format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
+st.set_page_config(
+    page_title="Cassandra",
+    page_icon="C.png",
 )
 
 # --- Initialize Cassandra (LLM wrapper) ---
@@ -31,7 +37,9 @@ if not st.session_state.messages:
     # Centered vertically and horizontally 
     st.markdown( 
         """ 
-        <style> 
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Noto+Sans+Arabic:wght@100..900&family=Spectral:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+
             .full-screen-center 
             {
                 display: flex; 
@@ -39,7 +47,7 @@ if not st.session_state.messages:
                 justify-content: center; 
                 align-items: center; 
                 height: 80vh; /* almost full viewport height */ 
-                text-align: center; 
+                text-align: center;
             } 
         </style> 
         """, unsafe_allow_html=True 
@@ -47,8 +55,8 @@ if not st.session_state.messages:
     st.markdown( 
         """ 
             <div class="full-screen-center"> 
-                <h1 style="padding-bottom: 5px">Cassandra</h1> 
-                <h3 style="padding-top: 5px">Your personal music editor & curator.</h3> 
+                <h1 style="padding-bottom: 5px; font-family: 'Spectral';">Cassandra</h1> 
+                <h3 style="padding-top: 5px;">Your personal music editor & curator.</h3> 
             </div> 
         """, unsafe_allow_html=True
     )
@@ -56,7 +64,8 @@ if not st.session_state.messages:
 # --- Replay past messages ---
 if st.session_state.messages:
     for msg in st.session_state.messages:
-        with st.chat_message(msg["role"]):
+        avatar = "C.png" if msg["role"] == "assistant" else "U.png"
+        with st.chat_message(msg["role"], avatar=avatar):
             st.markdown(msg["content"])
 
 # --- Chat input ---
@@ -65,7 +74,7 @@ user_input = st.chat_input("Let's talk music!", max_chars=300)
 if user_input:
     # Save + display user input
     st.session_state.messages.append({"role": "user", "content": user_input})
-    with st.chat_message("user"):
+    with st.chat_message("user", avatar="U.png"):
         st.markdown(user_input)
 
     # --- Prepare history for LangChain ---
@@ -96,19 +105,23 @@ if user_input:
             elif m["role"] == "assistant":
                 history_for_cassandra.append(AIMessage(content=m["content"]))
 
-    # --- Call Cassandra (LLM) ---
+    # --- Stream Cassandra response ---
     try:
-        result = st.session_state.cassandra.invoke({
-            "input": user_input,
-            "history": history_for_cassandra
-        })
-        print("Raw Cassandra result:", result)
-        assistant_text = getattr(result, "content", str(result))
-    except Exception:
-        logging.exception("Invocation failed")
+        assistant_text = ""
+        with st.chat_message("assistant", avatar="C.png"):
+            response_box = st.empty()  # placeholder
+            for chunk in st.session_state.cassandra.stream({
+                "input": user_input,
+                "history": history_for_cassandra
+            }):
+                text_chunk = getattr(chunk, "content", str(chunk))
+                assistant_text += text_chunk
+                response_box.markdown(assistant_text)  # updates in real-time
+                time.sleep(0.05) # slight delay to improve UX
+
+    except Exception as e:
+        logging.exception(f"Invocation failed: {e}")
         assistant_text = "Apologies, Something went wrong. Please try again."
 
-    # Save + display assistant response
+    # Save assistant response
     st.session_state.messages.append({"role": "assistant", "content": assistant_text})
-    with st.chat_message("assistant"):
-        st.markdown(assistant_text)

@@ -18,9 +18,9 @@ def summarizer():
     summarizer_llm = ChatOpenAI( 
         temperature=0, 
         model_name="gpt-5-nano", 
-        timeout=30, 
         max_retries=0, 
-        service_tier="flex" 
+        service_tier="flex",
+        streaming=False
     ) 
     
     return summarizer_prompt | summarizer_llm
@@ -41,10 +41,9 @@ def cassandra():
     chat_llm  = ChatOpenAI( 
         temperature=0.7, 
         model_name="gpt-5-nano",
-        timeout=30, 
         max_retries=0, 
         service_tier="flex",
-        streaming=False
+        streaming=True
     )    
 
     chat_chain = chat_prompt  | chat_llm
