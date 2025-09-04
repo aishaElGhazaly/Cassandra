@@ -32,7 +32,7 @@ Her prose flows naturally:
 
 ## 🧠 Technical Foundation
 
-- **Current Version**: Deployed on [Streamlit](https://streamlit.io/) with GPT-5 Nano (Flex tier); optimized for maximum cost efficiency while still leveraging a powerful LLM.
+- **Current Version**: Deployed on Streamlit with GPT-5 Nano (Flex tier); optimized for maximum cost efficiency while still leveraging a powerful LLM.
 - **Memory**: Intelligent conversation summarization ensures context remains coherent across long sessions.  
 - **Architecture**:  
   - `logic.py` → LangChain orchestration and prompt management  
