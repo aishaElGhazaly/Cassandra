@@ -1,8 +1,15 @@
 import time
+import logging
 import streamlit as st
 from logic import cassandra, summarizer
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 
+logging.basicConfig(
+    level=logging.WARNING,
+    filename="logs/cassandra.log",
+    filemode="a",
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 st.set_page_config(
     page_title="Cassandra",
@@ -111,7 +118,9 @@ if user_input:
                 assistant_text += text_chunk
                 response_box.markdown(assistant_text)  # updates in real-time
                 time.sleep(0.05) # slight delay to improve UX
-    except Exception:
+
+    except Exception as e:
+        logging.exception(f"Invocation failed: {e}")
         assistant_text = "Apologies, Something went wrong. Please try again."
 
     # Save assistant response
