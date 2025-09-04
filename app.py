@@ -48,8 +48,8 @@ if not st.session_state.messages:
     st.markdown( 
         """ 
             <div class="full-screen-center"> 
-                <h1 style="padding-bottom: 5px; font-family: 'Spectral';">Cassandra</h1> 
-                <h3 style="padding-top: 5px;">Your personal music editor & curator.</h3> 
+                <p style="margin-bottom: 0; font-size: 2.75rem; font-weight: 700; font-family: 'Spectral';">Cassandra</p> 
+                <p style="font-size: 1.75rem; font-weight: 600;">Your personal music editor & curator.</p> 
             </div> 
         """, unsafe_allow_html=True
     )
