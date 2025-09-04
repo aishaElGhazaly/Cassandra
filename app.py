@@ -7,7 +7,7 @@ from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 logging.basicConfig(
     level=logging.WARNING,
     filename="logs/cassandra.log",
-    filemode="a",
+    filemode="w",
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
@@ -55,9 +55,9 @@ if not st.session_state.messages:
     st.markdown( 
         """ 
             <div class="full-screen-center"> 
-                <h1 style="padding-bottom: 5px; font-family: 'Spectral';">Cassandra</h1> 
-                <h3 style="padding-top: 5px;">Your personal music editor & curator.</h3> 
-            </div> 
+                <p style="margin-bottom: 0; font-size: 2.75rem; font-weight: 700; font-family: 'Spectral';">Cassandra</p> 
+                <p style="font-size: 1.75rem; font-weight: 600;">Your personal music editor & curator.</p> 
+            </div>
         """, unsafe_allow_html=True
     )
 
@@ -122,6 +122,8 @@ if user_input:
     except Exception as e:
         logging.exception(f"Invocation failed: {e}")
         assistant_text = "Apologies, Something went wrong. Please try again."
+        with st.chat_message("assistant"):
+            st.markdown(assistant_text, avatar="C.png")
 
     # Save assistant response
     st.session_state.messages.append({"role": "assistant", "content": assistant_text})
