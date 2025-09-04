@@ -113,6 +113,8 @@ if user_input:
 
     except Exception:
         assistant_text = "Apologies, Something went wrong. Please try again."
+        with st.chat_message("assistant", avatar="C.png"):
+            st.markdown(assistant_text)
 
     # Save assistant response
     st.session_state.messages.append({"role": "assistant", "content": assistant_text})
