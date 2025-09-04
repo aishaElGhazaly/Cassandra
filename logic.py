@@ -1,12 +1,10 @@
+import os
+import streamlit as st
 from langchain_openai import ChatOpenAI 
 from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
 
-from dotenv import load_dotenv 
-
-load_dotenv() 
-def load_prompt(path="system_prompt.txt") -> str: 
-    with open(path, "r", encoding="utf-8") as f: 
-        return f.read() 
+# Pull key from Streamlit secrets
+os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 
 # --- Summarizer Chain ---
 def summarizer():
@@ -28,7 +26,7 @@ def summarizer():
 # --- Cassandra Chain ---
 def cassandra():  
     # Load the Cassandra system prompt 
-    system_prompt = load_prompt()
+    system_prompt = st.secrets.get("SYSTEM_PROMPT")
 
     # Set up the prompt with system + user inputs 
     chat_prompt = ChatPromptTemplate.from_messages([ 

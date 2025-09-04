@@ -1,15 +1,8 @@
 import time
-import logging
 import streamlit as st
 from logic import cassandra, summarizer
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 
-logging.basicConfig(
-    level=logging.WARNING,
-    filename="logs/cassandra.log",
-    filemode="a",
-    format="%(asctime)s - %(levelname)s - %(message)s"
-)
 
 st.set_page_config(
     page_title="Cassandra",
@@ -85,9 +78,8 @@ if user_input:
         try:
             result = st.session_state.summarizer.invoke({"history": history_text})
             st.session_state.summary = getattr(result, "content", str(result))
-            print("Summary:", st.session_state.summary)
         except Exception:
-            logging.exception("Summarization failed")
+            st.session_state.summary = "" # reset summary on error
 
         # Collapse: summary + last 4 turns
         history_for_cassandra = [SystemMessage(content=f"Conversation summary: {st.session_state.summary}")]
@@ -119,8 +111,7 @@ if user_input:
                 response_box.markdown(assistant_text)  # updates in real-time
                 time.sleep(0.05) # slight delay to improve UX
 
-    except Exception as e:
-        logging.exception(f"Invocation failed: {e}")
+    except Exception:
         assistant_text = "Apologies, Something went wrong. Please try again."
 
     # Save assistant response
