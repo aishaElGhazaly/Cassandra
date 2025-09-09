@@ -32,7 +32,7 @@ Her prose flows naturally:
 
 ## 🧠 Technical Foundation
 
-- **Current Version**: Deployed on Streamlit with GPT-5 Nano (Flex tier); optimized for maximum cost efficiency while still leveraging a powerful LLM.
+- **Current Version**: Deployed on Streamlit with GPT-5 Nano; optimized for cost efficiency while still leveraging a powerful LLM.
 - **Memory**: Intelligent conversation summarization ensures context remains coherent across long sessions.  
 - **Architecture**:  
   - `logic.py` → LangChain orchestration and prompt management  
@@ -43,8 +43,8 @@ Her prose flows naturally:
 ## 🛠️ Technology Stack
 
 - **Frontend**: Streamlit + custom CSS for typography & layout  
-- **Backend**: LangChain orchestration with OpenAI GPT-5 Nano (flex)
-- **Memory**: Context summarizer for long conversations powered by GPT-5 Nano (flex). 
+- **Backend**: LangChain orchestration with OpenAI GPT-5 Nano
+- **Memory**: Context summarizer for long conversations powered by GPT-5 Nano. 
 - **Deployment**: Streamlit Cloud (v1) → Hugging Face Spaces (future)  
 
 ---
