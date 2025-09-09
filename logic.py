@@ -16,8 +16,7 @@ def summarizer():
     summarizer_llm = ChatOpenAI( 
         temperature=0, 
         model_name="gpt-5-nano", 
-        max_retries=0, 
-        service_tier="flex",
+        max_retries=0,
         streaming=False
     ) 
     
@@ -39,8 +38,7 @@ def cassandra():
     chat_llm  = ChatOpenAI( 
         temperature=0.7, 
         model_name="gpt-5-nano",
-        max_retries=0, 
-        service_tier="flex",
+        max_retries=0,
         streaming=True
     )    
 
