@@ -65,13 +65,12 @@ if st.session_state.messages:
 user_input = st.chat_input("Let's talk music!", max_chars=300)
 
 if user_input:
-    # Save + display user input
-    st.session_state.messages.append({"role": "user", "content": user_input})
+    # Display user input
     with st.chat_message("user", avatar="U.png"):
         st.markdown(user_input)
 
     # --- Prepare history for LangChain ---
-    if len(st.session_state.messages) > 20:
+    if len(st.session_state.messages) > 10:
         history_to_summarize = st.session_state.messages[:-4]
         history_text = "\n".join(f"{m['role']}: {m['content']}" for m in history_to_summarize)
 
@@ -96,6 +95,9 @@ if user_input:
                 history_for_cassandra.append(HumanMessage(content=m["content"]))
             elif m["role"] == "assistant":
                 history_for_cassandra.append(AIMessage(content=m["content"]))
+
+    # Save user message
+    st.session_state.messages.append({"role": "user", "content": user_input})
 
     # --- Stream Cassandra response ---
     try:
