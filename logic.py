@@ -36,7 +36,7 @@ def cassandra():
     
     # Create the Main Cassandra LLM
     chat_llm  = ChatOpenAI( 
-        temperature=0.7, 
+        temperature=0.5, 
         model_name="gpt-5-nano",
         max_retries=0,
         streaming=True
